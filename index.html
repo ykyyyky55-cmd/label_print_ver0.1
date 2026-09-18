@@ -16,7 +16,6 @@
             margin: 0;
         }
 
-        /* 💡 테마 색상 변수 정의 */
         :root {
             --bg-main: #f3f4f6;
             --bg-card: #ffffff;
@@ -24,7 +23,6 @@
             --border-card: #e5e7eb;
         }
 
-        /* 다크 모드 테마 */
         body.theme-dark {
             --bg-main: #0f172a;
             --bg-card: #1e293b;
@@ -32,7 +30,6 @@
             --border-card: #334155;
         }
 
-        /* 회색 모드 테마 */
         body.theme-gray {
             --bg-main: #334155;
             --bg-card: #475569;
@@ -46,7 +43,6 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* 테마별 카드 배경 자동 전환 */
         body.theme-dark .bg-white, body.theme-gray .bg-white {
             background-color: var(--bg-card) !important;
             color: var(--text-main) !important;
@@ -88,7 +84,6 @@
             }
         }
 
-        /* 폼텍 3120 라벨 규격 (200mm x 138mm) */
         .label-card {
             width: 200mm;
             height: 138mm;
@@ -123,7 +118,6 @@
             }
         }
 
-        /* 상단 제품명 박스 수직/수평 정중앙 정렬 */
         .label-title {
             width: 100%;
             height: 110px;
@@ -143,7 +137,6 @@
             box-sizing: border-box;
         }
 
-        /* 본문 표 */
         .label-table {
             width: 100%;
             height: calc(100% - 110px);
@@ -264,7 +257,6 @@
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-2xl font-bold text-gray-800">🏷️ 코팅제 & 오일 라벨 출력 시스템</h1>
                 <div class="flex items-center gap-2">
-                    <!-- 💡 테마(배경색) 선택 드롭다운 -->
                     <span class="text-xs font-bold text-gray-500 whitespace-nowrap">🎨 배경 테마:</span>
                     <select id="theme-select" onchange="changeTheme(this.value)" class="p-1.5 border border-gray-300 rounded-md text-xs font-bold bg-gray-50 focus:outline-none">
                         <option value="light">☀️ 라이트 모드 (기본)</option>
@@ -325,23 +317,23 @@
             </div>
         </div>
 
-        <!-- 📅 출력 이력 불러오기 & 📊 내보내기 툴바 -->
+        <!-- 📅 💡 과거 출력 이력 조회 및 즉시 재출력 기능 강화 바 -->
         <div class="bg-slate-800 text-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-            <div class="md:col-span-6 flex items-center gap-2">
-                <span class="text-xs font-bold text-amber-300 whitespace-nowrap">📜 출력 이력 조회:</span>
-                <select id="history-dropdown" onchange="loadPrintHistory()" class="w-full p-2 border border-slate-600 rounded-md text-sm font-medium text-slate-900 bg-slate-100 focus:outline-none">
-                    <option value="">-- 과거 출력 내역 불러오기 --</option>
+            <div class="md:col-span-7 flex items-center gap-2">
+                <span class="text-xs font-bold text-amber-300 whitespace-nowrap">📜 과거 출력 이력 조회 & 재출력:</span>
+                <select id="history-dropdown" onchange="loadPrintHistory()" class="w-full p-2 border border-slate-600 rounded-md text-sm font-bold text-slate-900 bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <option value="">-- 과거에 출력했던 데이터 선택 --</option>
                 </select>
             </div>
-            <div class="md:col-span-6 flex justify-end gap-2">
-                <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-md text-xs shadow flex items-center gap-1 whitespace-nowrap">
+            <div class="md:col-span-5 flex justify-end gap-2">
+                <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-3 rounded-md text-xs shadow flex items-center gap-1 whitespace-nowrap">
                     📊 엑셀 다운로드 (.xlsx)
                 </button>
-                <button onclick="exportToGoogleSheetCSV()" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-md text-xs shadow flex items-center gap-1 whitespace-nowrap">
-                    🌐 구글시트용 내보내기 (.csv)
+                <button onclick="exportToGoogleSheetCSV()" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-3 rounded-md text-xs shadow flex items-center gap-1 whitespace-nowrap">
+                    🌐 구글시트용 CSV
                 </button>
                 <button onclick="clearHistory()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-3 rounded-md text-xs whitespace-nowrap">
-                    🗑️ 이력 전체 초기화
+                    🗑️ 이력 삭제
                 </button>
             </div>
         </div>
@@ -434,7 +426,7 @@
         <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
             <div class="p-4 border-b flex justify-between items-center bg-gray-50">
                 <div class="flex items-center gap-3">
-                    <h2 class="text-lg font-semibold text-gray-700 inline-block">라벨 목록</h2>
+                    <h2 class="text-lg font-semibold text-gray-700 inline-block">라벨 목록 (재출력 선택)</h2>
                     <button onclick="deleteSelectedRows()" class="bg-rose-100 hover:bg-rose-200 text-rose-700 font-semibold px-2.5 py-1 rounded text-xs border border-rose-300">
                         🗑️ 선택 항목 삭제
                     </button>
@@ -465,10 +457,15 @@
             </div>
         </div>
 
-        <h2 class="text-lg font-semibold text-gray-700 mb-3">라벨 미리보기</h2>
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-lg font-semibold text-gray-700">라벨 미리보기 (재출력 대상)</h2>
+            <button onclick="printLabels()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-md shadow text-xs flex items-center gap-1">
+                🖨️ 선택 라벨 인쇄하기
+            </button>
+        </div>
     </div>
 
-    <!-- 💡 신규 구분 / 제품 색인 / 기존 구분에 제품 추가 등록 모달 팝업 창 -->
+    <!-- 💡 신규 구분 / 제품 색인 모달 팝업 창 -->
     <div id="register-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 transform transition-all text-gray-800">
             <div class="flex justify-between items-center border-b pb-3 mb-4">
@@ -582,11 +579,11 @@
         let selectedIndexProduct = '';
         const QTY_OPTIONS = ['1,000 L', '900 L', '800 L', '700 L', '600 L', '500 L', '400 L', '300 L', '200 L', '100 L'];
         
-        const STORAGE_KEY = 'LABEL_APP_SAVED_DATA_V17';
-        const HISTORY_KEY = 'LABEL_APP_PRINT_HISTORY_V17';
-        const INDEX_STORAGE_KEY = 'LABEL_APP_SAVED_INDEX_V17';
-        const CAT_STORAGE_KEY = 'LABEL_APP_SAVED_CATS_V17';
-        const THEME_STORAGE_KEY = 'LABEL_APP_THEME_V17';
+        const STORAGE_KEY = 'LABEL_APP_SAVED_DATA_V18';
+        const HISTORY_KEY = 'LABEL_APP_PRINT_HISTORY_V18';
+        const INDEX_STORAGE_KEY = 'LABEL_APP_SAVED_INDEX_V18';
+        const CAT_STORAGE_KEY = 'LABEL_APP_SAVED_CATS_V18';
+        const THEME_STORAGE_KEY = 'LABEL_APP_THEME_V18';
 
         window.addEventListener('DOMContentLoaded', () => {
             loadSavedData();
@@ -595,7 +592,6 @@
             loadSavedTheme();
         });
 
-        // 💡 배경색 테마 변경 함수
         function changeTheme(themeName) {
             document.body.classList.remove('theme-dark', 'theme-gray');
             if (themeName === 'dark') {
@@ -845,8 +841,12 @@
                                   String(now.getMinutes()).padStart(2, '0') + ':' + 
                                   String(now.getSeconds()).padStart(2, '0');
 
+                const summaryNames = printedItems.map(i => i.productName).slice(0, 2).join(', ');
+                const extraCount = printedItems.length > 2 ? ` 외 ${printedItems.length - 2}건` : '';
+
                 const record = {
                     printedAt: timestamp,
+                    summary: summaryNames + extraCount,
                     count: printedItems.length,
                     items: JSON.parse(JSON.stringify(printedItems))
                 };
@@ -866,15 +866,16 @@
                 history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
             } catch (e) {}
 
-            dropdown.innerHTML = '<option value="">-- 과거 출력 내역 불러오기 --</option>';
+            dropdown.innerHTML = '<option value="">-- 과거에 출력했던 데이터 선택 --</option>';
             history.forEach((rec, idx) => {
                 const opt = document.createElement('option');
                 opt.value = idx;
-                opt.innerText = `📅 ${rec.printedAt} (${rec.count}건 출력됨)`;
+                opt.innerText = `📅 ${rec.printedAt} [${rec.count}건] ${rec.summary || ''}`;
                 dropdown.appendChild(opt);
             });
         }
 
+        // 💡 과거 출력 이력 불러와서 화면에 재출력 대기 상태로 세팅
         function loadPrintHistory() {
             const dropdown = document.getElementById('history-dropdown');
             const idx = dropdown.value;
@@ -887,11 +888,17 @@
 
             const selectedRecord = history[idx];
             if (selectedRecord && selectedRecord.items) {
-                if (confirm(`${selectedRecord.printedAt}에 출력했던 ${selectedRecord.count}개의 라벨 항목을 라벨 목록에 불러오시겠습니까?`)) {
+                if (confirm(`${selectedRecord.printedAt}에 출력했던 ${selectedRecord.count}개의 라벨 항목을 라벨 목록에 불러와서 재출력하시겠습니까?`)) {
                     extractedLabels = JSON.parse(JSON.stringify(selectedRecord.items));
+                    // 전체 선택 처리
+                    extractedLabels.forEach(item => item.checked = true);
+                    selectedCategory = '';
+                    selectedIndexProduct = '';
+                    searchQuery = '';
+                    document.getElementById('search-input').value = '';
                     saveData();
                     renderTable();
-                    alert(`'${selectedRecord.printedAt}' 출력 내역이 정상적으로 복원되었습니다.`);
+                    alert(`'${selectedRecord.printedAt}' 과거 출력 내역이 불러와졌습니다. 아래 미리보기를 확인하신 후 [🖨️ 선택 라벨 인쇄] 버튼을 누르시면 재출력됩니다.`);
                 }
             }
         }
@@ -1170,7 +1177,7 @@
                     alert('선택한 파일에서 라벨 규격 항목을 찾지 못했습니다.');
                 }
             };
-            reader.readAsArrayBuffer(file);
+            reader.readAsBuffer(file);
         });
 
         function getVal(data, r, c) {
