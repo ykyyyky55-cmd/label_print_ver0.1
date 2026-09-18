@@ -16,6 +16,48 @@
             margin: 0;
         }
 
+        /* 💡 테마 색상 변수 정의 */
+        :root {
+            --bg-main: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-main: #1f2937;
+            --border-card: #e5e7eb;
+        }
+
+        /* 다크 모드 테마 */
+        body.theme-dark {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --border-card: #334155;
+        }
+
+        /* 회색 모드 테마 */
+        body.theme-gray {
+            --bg-main: #334155;
+            --bg-card: #475569;
+            --text-main: #f8fafc;
+            --border-card: #64748b;
+        }
+
+        body {
+            background-color: var(--bg-main) !important;
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* 테마별 카드 배경 자동 전환 */
+        body.theme-dark .bg-white, body.theme-gray .bg-white {
+            background-color: var(--bg-card) !important;
+            color: var(--text-main) !important;
+            border-color: var(--border-card) !important;
+        }
+
+        body.theme-dark h1, body.theme-dark h2, body.theme-dark h3,
+        body.theme-gray h1, body.theme-gray h2, body.theme-gray h3 {
+            color: #f8fafc !important;
+        }
+
         @media print {
             html, body {
                 width: 210mm;
@@ -51,7 +93,8 @@
             width: 200mm;
             height: 138mm;
             border: 2px solid #000;
-            background: #fff;
+            background: #fff !important;
+            color: #000 !important;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -96,7 +139,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            color: #000;
+            color: #000 !important;
             box-sizing: border-box;
         }
 
@@ -119,16 +162,16 @@
             font-weight: 800;
             text-align: center;
             border-right: 2px solid #000;
-            background-color: #fff;
+            background-color: #fff !important;
             letter-spacing: 1px;
-            color: #000;
+            color: #000 !important;
         }
 
         .label-table td {
             font-size: 44px;
             font-weight: 800;
             text-align: center;
-            color: #000;
+            color: #000 !important;
             letter-spacing: 0.5px;
         }
 
@@ -159,7 +202,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: #fff;
+            background: #fff !important;
             line-height: 1.1;
             box-sizing: border-box;
             padding: 2px;
@@ -168,7 +211,7 @@
         .stamp-company {
             font-size: 10px;
             font-weight: bold;
-            color: #000;
+            color: #000 !important;
             border-bottom: 1px solid #000;
             padding-bottom: 2px;
             margin-bottom: 2px;
@@ -181,7 +224,7 @@
         .stamp-date {
             font-size: 12px;
             font-weight: bold;
-            color: #000;
+            color: #000 !important;
             margin: 1px 0;
             letter-spacing: -0.5px;
             white-space: nowrap;
@@ -190,7 +233,7 @@
         .stamp-pass {
             font-size: 10px;
             font-weight: bold;
-            color: #e11d48;
+            color: #e11d48 !important;
             letter-spacing: 1px;
             white-space: nowrap;
         }
@@ -221,8 +264,15 @@
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-2xl font-bold text-gray-800">🏷️ 코팅제 & 오일 라벨 출력 시스템</h1>
                 <div class="flex items-center gap-2">
-                    <span id="save-status" class="text-xs text-green-600 font-semibold bg-green-50 px-2.5 py-1 rounded border border-green-200">💾 데이터 자동 저장 중</span>
-                    <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded">📂 기존 구분에 제품명 직접 등록 지원</span>
+                    <!-- 💡 테마(배경색) 선택 드롭다운 -->
+                    <span class="text-xs font-bold text-gray-500 whitespace-nowrap">🎨 배경 테마:</span>
+                    <select id="theme-select" onchange="changeTheme(this.value)" class="p-1.5 border border-gray-300 rounded-md text-xs font-bold bg-gray-50 focus:outline-none">
+                        <option value="light">☀️ 라이트 모드 (기본)</option>
+                        <option value="dark">🌙 다크 모드</option>
+                        <option value="gray">🩶 회색 모드 (Gray)</option>
+                    </select>
+
+                    <span id="save-status" class="text-xs text-green-600 font-semibold bg-green-50 px-2.5 py-1 rounded border border-green-200">💾 자동 저장 중</span>
                 </div>
             </div>
             <div class="flex items-center gap-3 flex-wrap">
@@ -338,11 +388,11 @@
             <div class="grid grid-cols-2 md:grid-cols-6 gap-2 mb-3">
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">제품명</label>
-                    <input type="text" id="bulk-productName" placeholder="예: ODM 0W20" class="edit-input bg-white">
+                    <input type="text" id="bulk-productName" placeholder="예: ODM 0W20" class="edit-input bg-white text-gray-800">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">DATE (달력)</label>
-                    <input type="date" id="bulk-date" onchange="handleBulkDateChange(this.value)" class="edit-input bg-white">
+                    <input type="date" id="bulk-date" onchange="handleBulkDateChange(this.value)" class="edit-input bg-white text-gray-800">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">LOT NO (자동 연동)</label>
@@ -350,7 +400,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">수량 (선택)</label>
-                    <select id="bulk-qty" class="edit-select bg-white">
+                    <select id="bulk-qty" class="edit-select bg-white text-gray-800">
                         <option value="">-- 변경 안함 --</option>
                         <option value="1,000 L">1,000 L</option>
                         <option value="900 L">900 L</option>
@@ -366,7 +416,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">비고</label>
-                    <input type="text" id="bulk-note" placeholder="예: SG : 0.8430" class="edit-input bg-white">
+                    <input type="text" id="bulk-note" placeholder="예: SG : 0.8430" class="edit-input bg-white text-gray-800">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-rose-600 mb-1">검사일자(도장)</label>
@@ -420,7 +470,7 @@
 
     <!-- 💡 신규 구분 / 제품 색인 / 기존 구분에 제품 추가 등록 모달 팝업 창 -->
     <div id="register-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 transform transition-all">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 transform transition-all text-gray-800">
             <div class="flex justify-between items-center border-b pb-3 mb-4">
                 <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
                     ➕ 신규 구분 및 제품 등록
@@ -429,37 +479,33 @@
             </div>
             
             <div class="space-y-4">
-                <!-- 1. 신규 구분 등록 -->
                 <div>
                     <label class="block text-xs font-bold text-emerald-800 mb-1">📂 1. 신규 구분(파일명/시트) 등록</label>
                     <div class="flex gap-2">
-                        <input type="text" id="new-category-input" placeholder="예: 특수유.xlsx" class="edit-input bg-emerald-50 border-emerald-300">
+                        <input type="text" id="new-category-input" placeholder="예: 특수유.xlsx" class="edit-input bg-emerald-50 border-emerald-300 text-gray-800">
                         <button onclick="registerNewCategory()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded text-xs whitespace-nowrap shadow">
                             등록
                         </button>
                     </div>
                 </div>
 
-                <!-- 2. 신규 제품 색인 등록 -->
                 <div class="border-t pt-3">
                     <label class="block text-xs font-bold text-blue-800 mb-1">📑 2. 신규 제품 색인(독립 제품명) 등록</label>
                     <div class="flex gap-2">
-                        <input type="text" id="new-product-input" placeholder="예: SUPER 0W20 PAO" class="edit-input bg-blue-50 border-blue-300">
+                        <input type="text" id="new-product-input" placeholder="예: SUPER 0W20 PAO" class="edit-input bg-blue-50 border-blue-300 text-gray-800">
                         <button onclick="registerNewProductIndex()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded text-xs whitespace-nowrap shadow">
                             등록
                         </button>
                     </div>
                 </div>
 
-                <!-- 💡 3. 기존 구분에 제품명 직접 지정 등록 (요청 기능) -->
                 <div class="border-t pt-3 bg-amber-50/50 p-3 rounded-lg border border-amber-200">
                     <label class="block text-xs font-bold text-amber-900 mb-2">🏷️ 3. 기존 구분에 제품명 추가 등록</label>
                     <div class="space-y-2">
-                        <select id="modal-category-select" class="edit-select font-semibold bg-white border-amber-300">
-                            <!-- JS로 기존 구분 목록 자동 채움 -->
+                        <select id="modal-category-select" class="edit-select font-semibold bg-white border-amber-300 text-gray-800">
                         </select>
                         <div class="flex gap-2">
-                            <input type="text" id="target-product-input" placeholder="등록할 신규 제품명 입력..." class="edit-input bg-white border-amber-300">
+                            <input type="text" id="target-product-input" placeholder="등록할 신규 제품명 입력..." class="edit-input bg-white border-amber-300 text-gray-800">
                             <button onclick="registerProductToExistingCategory()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-1.5 rounded text-xs whitespace-nowrap shadow">
                                 구분에 등록
                             </button>
@@ -536,16 +582,35 @@
         let selectedIndexProduct = '';
         const QTY_OPTIONS = ['1,000 L', '900 L', '800 L', '700 L', '600 L', '500 L', '400 L', '300 L', '200 L', '100 L'];
         
-        const STORAGE_KEY = 'LABEL_APP_SAVED_DATA_V16';
-        const HISTORY_KEY = 'LABEL_APP_PRINT_HISTORY_V16';
-        const INDEX_STORAGE_KEY = 'LABEL_APP_SAVED_INDEX_V16';
-        const CAT_STORAGE_KEY = 'LABEL_APP_SAVED_CATS_V16';
+        const STORAGE_KEY = 'LABEL_APP_SAVED_DATA_V17';
+        const HISTORY_KEY = 'LABEL_APP_PRINT_HISTORY_V17';
+        const INDEX_STORAGE_KEY = 'LABEL_APP_SAVED_INDEX_V17';
+        const CAT_STORAGE_KEY = 'LABEL_APP_SAVED_CATS_V17';
+        const THEME_STORAGE_KEY = 'LABEL_APP_THEME_V17';
 
         window.addEventListener('DOMContentLoaded', () => {
             loadSavedData();
             updateHistoryDropdown();
             updateFontStyle();
+            loadSavedTheme();
         });
+
+        // 💡 배경색 테마 변경 함수
+        function changeTheme(themeName) {
+            document.body.classList.remove('theme-dark', 'theme-gray');
+            if (themeName === 'dark') {
+                document.body.classList.add('theme-dark');
+            } else if (themeName === 'gray') {
+                document.body.classList.add('theme-gray');
+            }
+            localStorage.setItem(THEME_STORAGE_KEY, themeName);
+        }
+
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'light';
+            document.getElementById('theme-select').value = savedTheme;
+            changeTheme(savedTheme);
+        }
 
         function openRegisterModal() {
             updateModalCategoryDropdown();
@@ -568,7 +633,6 @@
             });
         }
 
-        // 💡 3. 기존 구분에 제품명 직접 지정 등록
         function registerProductToExistingCategory() {
             const targetCat = document.getElementById('modal-category-select').value;
             const newProdName = document.getElementById('target-product-input').value.trim();
@@ -732,7 +796,7 @@
                 saveMasterCategories(currentCats);
 
                 const statusEl = document.getElementById('save-status');
-                statusEl.innerText = '💾 저장됨 (' + new Date().toLocaleTimeString('ko-KR') + ')';
+                statusEl.innerText = '💾 자동 저장됨 (' + new Date().toLocaleTimeString('ko-KR') + ')';
                 updateCategoryDropdown();
                 updateIndexDropdown();
             } catch (e) {
@@ -1296,16 +1360,16 @@
                 tr.className = 'bg-white border-b hover:bg-gray-50';
                 tr.innerHTML = `
                     <td class="p-3"><input type="checkbox" class="row-checkbox" ${item.checked ? 'checked' : ''} onchange="updateCheck(${item.id}, this.checked)"></td>
-                    <td class="px-3 py-2 text-xs font-semibold text-emerald-800"><input type="text" class="edit-input font-medium bg-emerald-50 border-emerald-200" value="${item.sheet || ''}" oninput="updateField(${item.id}, 'sheet', this.value)"></td>
+                    <td class="px-3 py-2 text-xs font-semibold text-emerald-800"><input type="text" class="edit-input font-medium bg-emerald-50 border-emerald-200 text-gray-800" value="${item.sheet || ''}" oninput="updateField(${item.id}, 'sheet', this.value)"></td>
                     <td class="px-2 py-2"><input type="text" class="edit-input font-semibold text-gray-800" value="${item.productName || ''}" oninput="updateField(${item.id}, 'productName', this.value)"></td>
-                    <td class="px-2 py-2"><input type="date" class="edit-input" value="${dateISO}" onchange="updateDateAndLot(${item.id}, this.value)"></td>
+                    <td class="px-2 py-2"><input type="date" class="edit-input text-gray-800" value="${dateISO}" onchange="updateDateAndLot(${item.id}, this.value)"></td>
                     <td class="px-2 py-2"><input type="text" class="edit-input font-semibold text-indigo-900" value="${item.lotNo || ''}" oninput="updateField(${item.id}, 'lotNo', this.value)"></td>
                     <td class="px-2 py-2">
-                        <select class="edit-select font-semibold" onchange="updateField(${item.id}, 'qty', this.value)">
+                        <select class="edit-select font-semibold text-gray-800" onchange="updateField(${item.id}, 'qty', this.value)">
                             ${qtyOptionsHtml}
                         </select>
                     </td>
-                    <td class="px-2 py-2"><input type="text" class="edit-input" value="${item.note || ''}" oninput="updateField(${item.id}, 'note', this.value)"></td>
+                    <td class="px-2 py-2"><input type="text" class="edit-input text-gray-800" value="${item.note || ''}" oninput="updateField(${item.id}, 'note', this.value)"></td>
                     <td class="px-2 py-2"><input type="date" class="edit-input font-bold text-rose-600 bg-rose-50 border-rose-200" value="${inspectISO}" onchange="updateField(${item.id}, 'inspectDate', this.value)"></td>
                     <td class="px-3 py-2 text-center"><button onclick="deleteRow(${item.id})" class="text-red-500 hover:text-red-700 font-bold">✕</button></td>
                 `;
