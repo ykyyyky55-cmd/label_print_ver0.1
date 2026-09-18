@@ -80,24 +80,30 @@
             }
         }
 
-        /* 상단 제품명 */
+        /* 💡 상단 제품명 박스 수직/수평 정중앙 정렬 적용 */
         .label-title {
+            width: 100%;
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
             font-size: 52px;
             font-weight: 800;
-            padding: 18px 10px;
+            padding: 0 10px;
             border-bottom: 2px solid #000;
             letter-spacing: 1px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             color: #000;
+            box-sizing: border-box;
         }
 
         /* 본문 표 */
         .label-table {
             width: 100%;
-            height: 100%;
+            height: calc(100% - 110px);
             border-collapse: collapse;
         }
 
@@ -216,7 +222,7 @@
                 <h1 class="text-2xl font-bold text-gray-800">🏷️ 코팅제 & 오일 라벨 출력 시스템</h1>
                 <div class="flex items-center gap-2">
                     <span id="save-status" class="text-xs text-green-600 font-semibold bg-green-50 px-2.5 py-1 rounded border border-green-200">💾 데이터 자동 저장 중</span>
-                    <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded">🎨 폰트 종류 및 크기 설정 가능</span>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded">🎯 제품명 수직/수평 중앙 정렬 적용</span>
                 </div>
             </div>
             <div class="flex items-center gap-3 flex-wrap">
@@ -468,10 +474,10 @@
         let selectedIndexProduct = '';
         const QTY_OPTIONS = ['1,000 L', '900 L', '800 L', '700 L', '600 L', '500 L', '400 L', '300 L', '200 L', '100 L'];
         
-        const STORAGE_KEY = 'LABEL_APP_SAVED_DATA_V13';
-        const HISTORY_KEY = 'LABEL_APP_PRINT_HISTORY_V13';
-        const INDEX_STORAGE_KEY = 'LABEL_APP_SAVED_INDEX_V13';
-        const CAT_STORAGE_KEY = 'LABEL_APP_SAVED_CATS_V13';
+        const STORAGE_KEY = 'LABEL_APP_SAVED_DATA_V14';
+        const HISTORY_KEY = 'LABEL_APP_PRINT_HISTORY_V14';
+        const INDEX_STORAGE_KEY = 'LABEL_APP_SAVED_INDEX_V14';
+        const CAT_STORAGE_KEY = 'LABEL_APP_SAVED_CATS_V14';
 
         window.addEventListener('DOMContentLoaded', () => {
             loadSavedData();
@@ -479,7 +485,6 @@
             updateFontStyle();
         });
 
-        // 🎨 폰트 및 크기 실시간 업데이트 함수
         function updateFontStyle() {
             const fontFamily = document.getElementById('font-family-select').value;
             const titleSize = document.getElementById('title-size-slider').value + 'px';
@@ -949,7 +954,7 @@
                     alert('선택한 파일에서 라벨 규격 항목을 찾지 못했습니다.');
                 }
             };
-            reader.readAsBuffer(file);
+            reader.readAsArrayBuffer(file);
         });
 
         function getVal(data, r, c) {
@@ -1229,7 +1234,6 @@
                 printArea.appendChild(pageDiv);
             }
 
-            // 미리보기 업데이트 후 폰트 및 글자 크기 적용
             updateFontStyle();
         }
 
