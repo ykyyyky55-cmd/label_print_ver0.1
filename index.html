@@ -222,7 +222,7 @@
                 <h1 class="text-2xl font-bold text-gray-800">🏷️ 코팅제 & 오일 라벨 출력 시스템</h1>
                 <div class="flex items-center gap-2">
                     <span id="save-status" class="text-xs text-green-600 font-semibold bg-green-50 px-2.5 py-1 rounded border border-green-200">💾 데이터 자동 저장 중</span>
-                    <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded">➕ 신규 구분/제품 목록 등록 지원</span>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded">📂 기존 구분에 제품명 직접 등록 지원</span>
                 </div>
             </div>
             <div class="flex items-center gap-3 flex-wrap">
@@ -296,7 +296,7 @@
             </div>
         </div>
 
-        <!-- 🔍 구분 및 연동 제품색인 검색바 (신규 목록 등록 버튼 추가) -->
+        <!-- 🔍 구분 및 연동 제품색인 검색바 -->
         <div class="bg-white p-4 rounded-lg shadow-md mb-6 border border-blue-100 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
             <div class="md:col-span-3 flex items-center gap-2">
                 <span class="text-xs font-bold text-gray-700 whitespace-nowrap">📂 구분 선택:</span>
@@ -418,17 +418,18 @@
         <h2 class="text-lg font-semibold text-gray-700 mb-3">라벨 미리보기</h2>
     </div>
 
-    <!-- 💡 신규 구분 / 제품 색인 직접 등록 모달 팝업 창 -->
+    <!-- 💡 신규 구분 / 제품 색인 / 기존 구분에 제품 추가 등록 모달 팝업 창 -->
     <div id="register-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 transform transition-all">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 transform transition-all">
             <div class="flex justify-between items-center border-b pb-3 mb-4">
                 <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                    ➕ 신규 구분 / 제품색인 등록
+                    ➕ 신규 구분 및 제품 등록
                 </h3>
                 <button onclick="closeRegisterModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
             </div>
             
             <div class="space-y-4">
+                <!-- 1. 신규 구분 등록 -->
                 <div>
                     <label class="block text-xs font-bold text-emerald-800 mb-1">📂 1. 신규 구분(파일명/시트) 등록</label>
                     <div class="flex gap-2">
@@ -437,18 +438,34 @@
                             등록
                         </button>
                     </div>
-                    <p class="text-[11px] text-gray-400 mt-1">* 입력 후 등록하면 [📂 구분] 드롭다운 목록에 추가됩니다.</p>
                 </div>
 
+                <!-- 2. 신규 제품 색인 등록 -->
                 <div class="border-t pt-3">
-                    <label class="block text-xs font-bold text-blue-800 mb-1">📑 2. 신규 제품 색인(제품명) 등록</label>
+                    <label class="block text-xs font-bold text-blue-800 mb-1">📑 2. 신규 제품 색인(독립 제품명) 등록</label>
                     <div class="flex gap-2">
                         <input type="text" id="new-product-input" placeholder="예: SUPER 0W20 PAO" class="edit-input bg-blue-50 border-blue-300">
                         <button onclick="registerNewProductIndex()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded text-xs whitespace-nowrap shadow">
                             등록
                         </button>
                     </div>
-                    <p class="text-[11px] text-gray-400 mt-1">* 입력 후 등록하면 [📑 제품 색인] 목록에 영구 누적 추가됩니다.</p>
+                </div>
+
+                <!-- 💡 3. 기존 구분에 제품명 직접 지정 등록 (요청 기능) -->
+                <div class="border-t pt-3 bg-amber-50/50 p-3 rounded-lg border border-amber-200">
+                    <label class="block text-xs font-bold text-amber-900 mb-2">🏷️ 3. 기존 구분에 제품명 추가 등록</label>
+                    <div class="space-y-2">
+                        <select id="modal-category-select" class="edit-select font-semibold bg-white border-amber-300">
+                            <!-- JS로 기존 구분 목록 자동 채움 -->
+                        </select>
+                        <div class="flex gap-2">
+                            <input type="text" id="target-product-input" placeholder="등록할 신규 제품명 입력..." class="edit-input bg-white border-amber-300">
+                            <button onclick="registerProductToExistingCategory()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-1.5 rounded text-xs whitespace-nowrap shadow">
+                                구분에 등록
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-amber-700 mt-1.5">* 선택한 기존 구분의 소속으로 제품이 등록되어 라벨 항목이 자동 생성됩니다.</p>
                 </div>
             </div>
 
@@ -519,10 +536,10 @@
         let selectedIndexProduct = '';
         const QTY_OPTIONS = ['1,000 L', '900 L', '800 L', '700 L', '600 L', '500 L', '400 L', '300 L', '200 L', '100 L'];
         
-        const STORAGE_KEY = 'LABEL_APP_SAVED_DATA_V15';
-        const HISTORY_KEY = 'LABEL_APP_PRINT_HISTORY_V15';
-        const INDEX_STORAGE_KEY = 'LABEL_APP_SAVED_INDEX_V15';
-        const CAT_STORAGE_KEY = 'LABEL_APP_SAVED_CATS_V15';
+        const STORAGE_KEY = 'LABEL_APP_SAVED_DATA_V16';
+        const HISTORY_KEY = 'LABEL_APP_PRINT_HISTORY_V16';
+        const INDEX_STORAGE_KEY = 'LABEL_APP_SAVED_INDEX_V16';
+        const CAT_STORAGE_KEY = 'LABEL_APP_SAVED_CATS_V16';
 
         window.addEventListener('DOMContentLoaded', () => {
             loadSavedData();
@@ -530,15 +547,65 @@
             updateFontStyle();
         });
 
-        // 💡 신규 등록 모달 열기/닫기
         function openRegisterModal() {
+            updateModalCategoryDropdown();
             document.getElementById('register-modal').classList.remove('hidden');
         }
         function closeRegisterModal() {
             document.getElementById('register-modal').classList.add('hidden');
         }
 
-        // 💡 1. 신규 구분 등록
+        function updateModalCategoryDropdown() {
+            const dropdown = document.getElementById('modal-category-select');
+            const categories = getMasterCategories();
+
+            dropdown.innerHTML = '<option value="">-- 기존 구분(파일명/시트) 선택 --</option>';
+            categories.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.innerText = c;
+                dropdown.appendChild(opt);
+            });
+        }
+
+        // 💡 3. 기존 구분에 제품명 직접 지정 등록
+        function registerProductToExistingCategory() {
+            const targetCat = document.getElementById('modal-category-select').value;
+            const newProdName = document.getElementById('target-product-input').value.trim();
+
+            if (!targetCat) {
+                alert('제품을 등록할 기존 구분을 선택해 주세요.');
+                return;
+            }
+            if (!newProdName) {
+                alert('등록할 제품명을 입력해 주세요.');
+                return;
+            }
+
+            const todayStr = '26.08.12';
+            extractedLabels.push({
+                id: Date.now() + Math.random(),
+                checked: true,
+                sheet: targetCat,
+                productName: newProdName,
+                date: todayStr,
+                lotNo: 'G260812-021',
+                qty: '1,000 L',
+                note: '',
+                inspectDate: todayStr
+            });
+
+            saveMasterIndex([newProdName]);
+            selectedCategory = targetCat;
+            selectedIndexProduct = newProdName;
+
+            saveData();
+            document.getElementById('target-product-input').value = '';
+            closeRegisterModal();
+            renderTable();
+            alert(`'${targetCat}' 구분에 '${newProdName}' 제품이 성공적으로 등록되었습니다!`);
+        }
+
         function registerNewCategory() {
             const val = document.getElementById('new-category-input').value.trim();
             if (!val) {
@@ -555,7 +622,6 @@
             alert(`'${val}' 구분이 목록에 성공적으로 등록되었습니다.`);
         }
 
-        // 💡 2. 신규 제품 색인 등록
         function registerNewProductIndex() {
             const val = document.getElementById('new-product-input').value.trim();
             if (!val) {
