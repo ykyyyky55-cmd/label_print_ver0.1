@@ -7,6 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
+    <!-- 외부 웹폰트 지원 -->
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+
     <style>
         @page {
             size: A4 portrait;
@@ -52,7 +55,7 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            font-family: '맑은 고딕', 'Malgun Gothic', Arial, sans-serif;
+            font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
             position: relative;
         }
 
@@ -77,9 +80,10 @@
             }
         }
 
+        /* 상단 제품명 */
         .label-title {
             text-align: center;
-            font-size: 60px;
+            font-size: 52px;
             font-weight: 800;
             padding: 18px 10px;
             border-bottom: 2px solid #000;
@@ -90,6 +94,7 @@
             color: #000;
         }
 
+        /* 본문 표 */
         .label-table {
             width: 100%;
             height: 100%;
@@ -211,7 +216,7 @@
                 <h1 class="text-2xl font-bold text-gray-800">🏷️ 코팅제 & 오일 라벨 출력 시스템</h1>
                 <div class="flex items-center gap-2">
                     <span id="save-status" class="text-xs text-green-600 font-semibold bg-green-50 px-2.5 py-1 rounded border border-green-200">💾 데이터 자동 저장 중</span>
-                    <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded">📅 출력 이력 일자별 누적 저장 지원</span>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded">🎨 폰트 종류 및 크기 설정 가능</span>
                 </div>
             </div>
             <div class="flex items-center gap-3 flex-wrap">
@@ -232,8 +237,35 @@
                     ⚠️ 전체 라벨 삭제
                 </button>
                 <button onclick="printLabels()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-md shadow flex items-center gap-2 whitespace-nowrap">
-                    🖨️ 선택 라벨 인쇄 (자동 이력 저장)
+                    🖨️ 선택 라벨 인쇄
                 </button>
+            </div>
+        </div>
+
+        <!-- 🎨 라벨 폰트 스타일 및 크기 설정 바 -->
+        <div class="bg-violet-900 text-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+            <div class="md:col-span-4 flex items-center gap-2">
+                <span class="text-xs font-bold text-violet-200 whitespace-nowrap">🔤 글꼴(폰트) 종류:</span>
+                <select id="font-family-select" onchange="updateFontStyle()" class="w-full p-2 border border-violet-400 rounded-md text-sm font-bold text-slate-900 bg-violet-50 focus:outline-none">
+                    <option value="'맑은 고딕', 'Malgun Gothic', sans-serif">맑은 고딕 (기본)</option>
+                    <option value="'나눔고딕', 'Nanum Gothic', sans-serif">나눔고딕 (Nanum Gothic)</option>
+                    <option value="'Noto Sans KR', sans-serif">노토 산스 (Noto Sans KR)</option>
+                    <option value="'돋움', Dotum, sans-serif">돋움 (Dotum)</option>
+                    <option value="'굴림', Gulim, sans-serif">굴림 (Gulim)</option>
+                    <option value="'Arial', sans-serif">Arial</option>
+                </select>
+            </div>
+
+            <div class="md:col-span-4 flex items-center gap-2">
+                <span class="text-xs font-bold text-violet-200 whitespace-nowrap">🏷️ 제품명 크기:</span>
+                <input type="range" id="title-size-slider" min="36" max="68" value="52" oninput="updateFontSizeUI()" class="w-full cursor-pointer accent-violet-400">
+                <span id="title-size-val" class="text-xs font-bold bg-violet-800 px-2 py-1 rounded border border-violet-700 min-w-[45px] text-center">52px</span>
+            </div>
+
+            <div class="md:col-span-4 flex items-center gap-2">
+                <span class="text-xs font-bold text-violet-200 whitespace-nowrap">📋 본문글자 크기:</span>
+                <input type="range" id="body-size-slider" min="28" max="58" value="44" oninput="updateFontSizeUI()" class="w-full cursor-pointer accent-violet-400">
+                <span id="body-size-val" class="text-xs font-bold bg-violet-800 px-2 py-1 rounded border border-violet-700 min-w-[45px] text-center">44px</span>
             </div>
         </div>
 
@@ -436,15 +468,45 @@
         let selectedIndexProduct = '';
         const QTY_OPTIONS = ['1,000 L', '900 L', '800 L', '700 L', '600 L', '500 L', '400 L', '300 L', '200 L', '100 L'];
         
-        const STORAGE_KEY = 'LABEL_APP_SAVED_DATA_V12';
-        const HISTORY_KEY = 'LABEL_APP_PRINT_HISTORY_V12';
-        const INDEX_STORAGE_KEY = 'LABEL_APP_SAVED_INDEX_V12';
-        const CAT_STORAGE_KEY = 'LABEL_APP_SAVED_CATS_V12';
+        const STORAGE_KEY = 'LABEL_APP_SAVED_DATA_V13';
+        const HISTORY_KEY = 'LABEL_APP_PRINT_HISTORY_V13';
+        const INDEX_STORAGE_KEY = 'LABEL_APP_SAVED_INDEX_V13';
+        const CAT_STORAGE_KEY = 'LABEL_APP_SAVED_CATS_V13';
 
         window.addEventListener('DOMContentLoaded', () => {
             loadSavedData();
             updateHistoryDropdown();
+            updateFontStyle();
         });
+
+        // 🎨 폰트 및 크기 실시간 업데이트 함수
+        function updateFontStyle() {
+            const fontFamily = document.getElementById('font-family-select').value;
+            const titleSize = document.getElementById('title-size-slider').value + 'px';
+            const bodySize = document.getElementById('body-size-slider').value + 'px';
+            const thSize = (parseInt(document.getElementById('body-size-slider').value) - 6) + 'px';
+
+            document.querySelectorAll('.label-card').forEach(card => {
+                card.style.fontFamily = fontFamily;
+            });
+            document.querySelectorAll('.label-title').forEach(el => {
+                el.style.fontSize = titleSize;
+            });
+            document.querySelectorAll('.label-table th').forEach(el => {
+                el.style.fontSize = thSize;
+            });
+            document.querySelectorAll('.label-table td').forEach(el => {
+                el.style.fontSize = bodySize;
+            });
+        }
+
+        function updateFontSizeUI() {
+            const titleVal = document.getElementById('title-size-slider').value;
+            const bodyVal = document.getElementById('body-size-slider').value;
+            document.getElementById('title-size-val').innerText = titleVal + 'px';
+            document.getElementById('body-size-val').innerText = bodyVal + 'px';
+            updateFontStyle();
+        }
 
         function generateLotFromDate(isoDateStr, oldLotNo = '') {
             if (!isoDateStr) return oldLotNo;
@@ -551,7 +613,6 @@
             }
         }
 
-        // 📜 출력 이력 일자별 누적 저장 함수
         function savePrintHistory(printedItems) {
             try {
                 let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
@@ -569,7 +630,7 @@
                     items: JSON.parse(JSON.stringify(printedItems))
                 };
 
-                history.unshift(record); // 최신 출력이 위에 오도록 추가
+                history.unshift(record);
                 localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
                 updateHistoryDropdown();
             } catch (e) {
@@ -622,7 +683,6 @@
             }
         }
 
-        // 📊 엑셀 (.xlsx) 내보내기
         function exportToExcel() {
             const itemsToExport = getFilteredLabels();
             if (itemsToExport.length === 0) {
@@ -649,7 +709,6 @@
             XLSX.writeFile(workbook, fileName);
         }
 
-        // 🌐 구글 시트 전용 CSV 내보내기
         function exportToGoogleSheetCSV() {
             const itemsToExport = getFilteredLabels();
             if (itemsToExport.length === 0) {
@@ -890,7 +949,7 @@
                     alert('선택한 파일에서 라벨 규격 항목을 찾지 못했습니다.');
                 }
             };
-            reader.readAsArrayBuffer(file);
+            reader.readAsBuffer(file);
         });
 
         function getVal(data, r, c) {
@@ -1169,6 +1228,9 @@
 
                 printArea.appendChild(pageDiv);
             }
+
+            // 미리보기 업데이트 후 폰트 및 글자 크기 적용
+            updateFontStyle();
         }
 
         function printLabels() {
@@ -1180,7 +1242,6 @@
                 return;
             }
 
-            // 💡 인쇄 직전 현재 선택 인쇄 내역을 일자별 자동 저장
             savePrintHistory(selectedItems);
 
             updatePreview(true);
